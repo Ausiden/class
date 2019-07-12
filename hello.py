@@ -195,6 +195,7 @@ def plotContour(thetai, X, y, num):  # 这个函数是网上抄的-0-
 dataset = np.loadtxt('ex1data1', delimiter=',')  # 读取数据集文本
 xx = dataset[:, 0]  # 取出文本的第一列
 yy = dataset[:, 1]  # 取出文本的第二列
+print(xx.shape)
 num = len(xx)
 #print(num) #看看有多少个x (有97个数据)
 x = xx.reshape(num, 1)  # 转成num行的列向量
@@ -215,6 +216,7 @@ predictProfit()
 plotData(x, y, thetai[0], thetai[1])
 plot3DJtheta()
 plotContour(thetai, X, y, num)
+plt.show()
 """
 """
 单变量线性
@@ -266,5 +268,3 @@ def readfile():
 readfile()
 """
 
-fig=plt.figure(figsize=(4,3),facecolor='blue')
-plt.show()
