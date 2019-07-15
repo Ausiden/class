@@ -33,7 +33,7 @@ def sumcost(x,y,theta,m):    #计算代价函数
     h=sigmoid(np.dot(x,theta))
     return (np.dot(np.log(h).T,y)+np.dot(np.log(1-h).T,1-y))/m*(-1.0)
 def fitpoint(x,y,m,diedai,len):    #迭代返回最优的theta
-    theta=np.zeros((len,1))
+    theta=np.zeros((len+1,1))
     a=0.001
     xt=x.T
     for i in range(diedai):
@@ -45,8 +45,10 @@ def init(x,y):
     x=np.array(x)
     n=x.shape[1]  #特征
     m=x.shape[0]  #样本
+    x0=np.ones((m,1))
+    X=np.c_[x0,x]
     y=np.array(y).reshape(m, 1)
-    return x,y,n,m
+    return X,y,n,m
 
 def countscore(theta,x_test,y_test): #测试准确度
     x_test,y_test,nt,mt=init(x_test,y_test)
