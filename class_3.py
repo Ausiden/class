@@ -110,7 +110,6 @@ def updata_c(x,k,idx): #更新聚
     for i in range(k):
         indices=np.where(idx==i)
         c[i,:]=(np.sum(x[indices,:],axis=1)/len(indices[0])).ravel()
-    print(c)
         #c[i] = np.nanmean(x[np.where(idx == i)], axis=0)
     return c
 
