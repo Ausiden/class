@@ -77,9 +77,11 @@ def pca(x,k):
     x=x-u  #均值归一化
     sigma=np.cov(x,rowvar=0)  #计算协方差矩阵
     w,v=np.linalg.eig(sigma)  #w为特征值 v为特征向量
+    print(w.shape,v.shape)
     index=np.argsort(-w)  #特征值从大到小排序，返回索引
     index_change=index[:k]  #取前k个
     v_change=v[:,index_change]
+    print(x.shape,v_change.shape)
     z=x.dot(v_change)
     return z
 #Kmeans
@@ -108,8 +110,8 @@ def updata_c(x,k,idx): #更新聚
     m,n=x.shape
     c=np.zeros((k,n))
     for i in range(k):
-        indices=np.where(idx==i)
-        c[i,:]=(np.sum(x[indices,:],axis=1)/len(indices[0])).ravel()
+        indices=np.array(np.where(idx==i)).ravel()
+        c[i,:]=np.sum(x[indices,:],axis=0)/indices.shape[0]
         #c[i] = np.nanmean(x[np.where(idx == i)], axis=0)
     return c
 
@@ -139,7 +141,7 @@ def run_all_kmeans(x,k,repeate,r_min): #重复随机生成聚，获取最小的
             result_c=c
     return result_idx,result_c
 X_train=pca(X_train,2)
-idx,c=run_all_kmeans(X_train,5,10,10)
+idx,c=run_all_kmeans(X_train,10,10,10)
 ax,fig=plt.subplots()
 fig.scatter(X_train[:,0],X_train[:,1],c=idx,marker=".")
 plt.show()

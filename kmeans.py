@@ -27,9 +27,10 @@ def updata_c(x,k,idx): #更新聚
     m,n=x.shape
     c=np.zeros((k,n))
     for i in range(k):
-        indices=np.where(idx==i)
-        c[i,:]=(np.sum(x[indices,:],axis=1)/len(indices[0])).ravel()
-        #c[i] = np.nanmean(x[np.where(idx == i)], axis=0)
+        #indices=np.where(idx==i)
+        #c[i,:]=(np.sum(x[indices,:],axis=1)/len(indices[0])).ravel()
+        indices = np.array(np.where(idx == i)).ravel()
+        c[i, :] = np.sum(x[indices, :], axis=0) / indices.shape[0]
     return c
 
 def run_one_kmeans(x,k,repeate):
@@ -59,7 +60,6 @@ def run_all_kmeans(x,k,repeate,r_min): #重复随机生成聚，获取最小的
 """
 data=loadmat("datasets/ex7data2.mat")   #导入数据
 x=data['X']
-
 idx,c=run_all_kmeans(x,3,10,30)
 cluster1=x[np.where(idx==0)[0],:]
 cluster2=x[np.where(idx==1)[0],:]
@@ -70,7 +70,6 @@ ax.scatter(cluster2[:,0],cluster2[:,1],s=30,color="g",label="cluster2")
 ax.scatter(cluster3[:,0],cluster3[:,1],s=30,color="b",label="cluster3")
 ax.legend()
 plt.show()
-"""
 image=Image.open("picture/bird_small.png")
 image_data=np.array(image)
 print("图像的大小为{}".format(image_data.__sizeof__()))
@@ -84,4 +83,4 @@ image_change=image_change.reshape(image_data.shape[0],image_data.shape[1],image_
 print("图像压缩后的大小为{}".format(image_change.__sizeof__()))
 plt.imshow(image_change.astype(int))
 plt.show()
-
+"""
