@@ -1,3 +1,4 @@
+"""
 import math
 
 movie_data = {"宝贝当家": [45, 2, 9, "喜剧片"],
@@ -38,4 +39,64 @@ for s in KNN:
     label = movie_data[s[0]]
     labels[label[3]] += 1
 labels =sorted(labels.items(),key=lambda l: l[1],reverse=True)
-print(labels,labels[0][0],sep='\n')
+print(labels,labels[0][0],sep='\n')"""
+import numpy as np
+import loaddata as ld
+
+
+def comput_distance_two_loop(x_train, x_test):
+    m_train = x_train.shape[0]
+    m_test = x_test.shape[0]
+    dists = np.zeros((m_test, m_train))
+    for i in range(m_test):
+        for j in range(m_train):
+            dists[i][j] = np.sum((x_test[i, :] - x_train[j, :]) ** 2)
+    return dists
+
+
+def comput_distance_one_loop(x_train, x_test):
+    m_train = x_train.shape[0]
+    m_test = x_test.shape[0]
+    dists = np.zeros((m_test, m_train))
+    for i in range(m_test):
+        dists[i, :] = np.sum(np.square(x_train - x_test[i, :]), axis=1)
+    return dists
+
+
+def comput_distance_no_loop(x_train, x_test):  #???出错
+    m_train = x_train.shape[0]
+    m_test = x_test.shape[0]
+    dists = np.zeros((m_test, m_train))
+    test_sum = np.sum(np.square(x_test), axis=1)
+    train_sum = np.sum(np.square(x_train), axis=1)
+    inner_product = np.dot(x_test, x_train.T)
+    dists = -2 * inner_product + test_sum.reshape(-1, 1) + train_sum.reshape(1,-1)
+    return dists
+
+
+def pridict(x_train, x_test, y_train, y_test, k):
+    dists = comput_distance_one_loop(x_train, x_test)
+    m = x_test.shape[0]
+    y_pred = np.zeros(m)
+    count = 0
+    for i in range(m):
+        y_indicies = np.argsort(dists[i, :], axis=0)
+        closest_y = y_train[y_indicies[:k]]
+        y_pred[i] = np.argmax(np.bincount(closest_y))
+        print("第{}个样本的预测值为{}，实际标签为{}".format(i, y_pred[i], y_test[i]))
+        if y_pred[i] == y_test[i]:
+            count += 1
+        score = count / m
+    return y_pred, score
+
+
+X_train, y_train = ld.load_mnist("MNIST_data/", kind="train")
+X_test, y_test = ld.load_mnist("MNIST_data/", kind="t10k")
+xtrain = X_train[:2000]
+ytrain = y_train[:2000]
+xtest = X_test[:500]
+ytest = y_test[:500]
+y_pred, score = pridict(xtrain, xtest, ytrain, ytest, 5)
+print("KNN的精确度为{}".format(score))
+
+
