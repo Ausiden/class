@@ -40,3 +40,5 @@ def svm_loss_vectorized(w, x_train, y_train, reg):
 
 
 
+
+
